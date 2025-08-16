@@ -1,11 +1,6 @@
 package com.bivolaris.centralbank.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import org.hibernate.annotations.ColumnDefault;
-
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 

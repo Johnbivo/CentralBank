@@ -2,13 +2,18 @@ package com.bivolaris.centralbank.entities;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 
 import java.time.LocalDateTime;
 
-
+@Getter
+@Setter
 @Entity
 @Table(name = "auth")
 public class Auth {
+
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -48,6 +53,18 @@ public class Auth {
     private authStatus status;
 
 
+    public static Auth createNewAuthForUser(String username, String password, boolean agreedToTerms) {
+        Auth auth = new Auth();
+        auth.setUsername(username);
+        auth.setPassword(password);
+        auth.setAgreed_to_terms(agreedToTerms);
+        auth.setVerified_email(false);
+        auth.setTfa_enabled(false);
+        auth.setCreated_at(LocalDateTime.now());
+        auth.setUpdated_at(LocalDateTime.now());
+        auth.setStatus(authStatus.INACTIVE);
+        return auth;
+    }
 
 
 }

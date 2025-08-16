@@ -1,11 +1,16 @@
 package com.bivolaris.centralbank.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+
+@Getter
+@Setter
 @Entity
 @Table(name = "employees")
 public class Employee {
@@ -14,12 +19,6 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-
-
-    @ManyToOne
-    @JoinColumn(name = "bank_id")
-    private Bank bank;
-
 
 
     @Column(name = "first_name")
@@ -65,5 +64,24 @@ public class Employee {
     @OneToMany
     @JoinColumn(name = "reviewed_by")
     private Set<Fraudcase> fraudcases = new LinkedHashSet<>();
+
+
+    public static Employee createNewEmployee(String firstName, String lastName,
+                                             String email, String phoneNumber, String address,
+                                             String city, String profession) {
+        Employee employee = new Employee();
+        employee.setFirstName(firstName);
+        employee.setLastName(lastName);
+        employee.setEmail(email);
+        employee.setPhoneNumber(phoneNumber);
+        employee.setAddress(address);
+        employee.setCity(city);
+        employee.setProfession(profession);
+        employee.setCreatedAt(Instant.now());
+        employee.setUpdatedAt(Instant.now());
+        employee.setAuditlogs(new LinkedHashSet<>());
+        employee.setFraudcases(new LinkedHashSet<>());
+        return employee;
+    }
 
 }
