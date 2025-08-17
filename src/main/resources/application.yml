@@ -7,3 +7,14 @@ spring:
     password: ${DATABASE_PASSWORD}
   jpa:
     show-sql: true
+    open-in-view: false
+
+  jwt:
+    secret: ${JWT_SECRET}
+    accessTokenExpiration: 900 # 15 min
+    refreshTokenExpiration: 604800 # 7 days
+
+
+  mvc:
+    servlet:
+      path: /api

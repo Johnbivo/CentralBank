@@ -57,6 +57,9 @@ public class Employee {
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private Instant updatedAt;
 
+    @OneToOne(mappedBy = "employee")
+    private Auth auth;
+
     @OneToMany
     @JoinColumn(name = "employee_id")
     private Set<Auditlog> auditlogs = new LinkedHashSet<>();

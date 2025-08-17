@@ -52,6 +52,15 @@ public class Auth {
     @Enumerated(EnumType.STRING)
     private authStatus status;
 
+    @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
+
+
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private AuthRole role;
+
 
     public static Auth createNewAuthForUser(String username, String password, boolean agreedToTerms) {
         Auth auth = new Auth();
@@ -63,8 +72,11 @@ public class Auth {
         auth.setCreated_at(LocalDateTime.now());
         auth.setUpdated_at(LocalDateTime.now());
         auth.setStatus(authStatus.INACTIVE);
+        auth.setRole(AuthRole.USER);
         return auth;
     }
+
+
 
 
 }
