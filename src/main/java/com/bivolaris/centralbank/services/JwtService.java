@@ -38,7 +38,7 @@ public class JwtService {
                 .subject(authId.toString())
                 .add("role", role)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + tokenExpiration))
+                .expiration(new Date(System.currentTimeMillis() + tokenExpiration * 1000L))
                 .build();
 
         return new Jwt(claims, jwtConfig.getSecretKey());

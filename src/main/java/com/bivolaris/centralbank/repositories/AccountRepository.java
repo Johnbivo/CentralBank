@@ -1,0 +1,21 @@
+package com.bivolaris.centralbank.repositories;
+
+import com.bivolaris.centralbank.entities.Account;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+import java.util.UUID;
+
+
+@Repository
+public interface AccountRepository extends JpaRepository<Account , UUID> {
+
+    @Query(value = "SELECT * FROM Accounts WHERE account_number = :accountNumber", nativeQuery = true)
+    Account findByAccountNumber(@Param("accountNumber") String accountNumber);
+
+
+    boolean existsByAccountNumber(String accountNumber);
+}

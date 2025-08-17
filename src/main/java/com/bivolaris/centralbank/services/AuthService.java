@@ -64,20 +64,6 @@ public class AuthService {
         }
     }
 
-    public boolean resetPassword(ResetPasswordRequest resetPasswordRequest) {
-       var oldPassword =  resetPasswordRequest.getOldPassword();
 
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
-                )
-       var confirmPassword = resetPasswordRequest.getConfirmPassword();
-       if (!password.equals(confirmPassword)) {
-           return false;
-       }
-
-    }
-
-    public
 
 }

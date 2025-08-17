@@ -106,10 +106,9 @@ public class AuthController {
         return ResponseEntity.ok(userDto);
     }
 
-    @PostMapping("/reset-password")
-    public ResponseEntity<Void> resetPassword(){
 
-    }
+
+
 
 
     @ExceptionHandler({BadCredentialsException.class})
