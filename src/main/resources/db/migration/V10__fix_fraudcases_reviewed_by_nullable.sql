@@ -1,0 +1,2 @@
+
+ALTER TABLE fraudcases MODIFY COLUMN reviewed_by BIGINT NULL;
