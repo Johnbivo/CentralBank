@@ -9,6 +9,8 @@ import com.bivolaris.centralbank.dtos.RegisterRequest;
 import com.bivolaris.centralbank.dtos.UserDto;
 import com.bivolaris.centralbank.entities.Bank;
 import com.bivolaris.centralbank.entities.BankStatus;
+import com.bivolaris.centralbank.exceptions.BankNotFoundException;
+import com.bivolaris.centralbank.exceptions.UnauthorizedOperationException;
 import com.bivolaris.centralbank.mappers.UserMapper;
 import com.bivolaris.centralbank.repositories.AuthRepository;
 import com.bivolaris.centralbank.repositories.BankRepository;
@@ -25,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Value;
@@ -143,8 +145,7 @@ public class AuthController {
             @RequestHeader("Bank-Secret") String bankSecret) {
 
         if (!bankMasterSecret.equals(bankSecret)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Invalid bank secret");
+            throw new UnauthorizedOperationException("Invalid bank secret");
         }
 
         Bank bank = bankRepository.findAll().stream()
@@ -153,8 +154,7 @@ public class AuthController {
                 .orElse(null);
         
         if (bank == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Invalid bank SWIFT code or bank not active");
+            throw new BankNotFoundException(request.getSwift());
         }
         
 
@@ -165,8 +165,5 @@ public class AuthController {
         return ResponseEntity.ok(new JwtResponse(bankToken));
     }
 
-    @ExceptionHandler({BadCredentialsException.class})
-    public ResponseEntity<Void> handleBadCredentialsException(){
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    }
+
 }

@@ -4,6 +4,7 @@ package com.bivolaris.centralbank.controllers;
 import com.bivolaris.centralbank.dtos.AccountAllDto;
 import com.bivolaris.centralbank.dtos.AccountDetailsRequest;
 import com.bivolaris.centralbank.dtos.CreateAccountRequest;
+import com.bivolaris.centralbank.exceptions.ValidationException;
 import com.bivolaris.centralbank.services.AccountService;
 import com.bivolaris.centralbank.services.AuditService;
 import lombok.AllArgsConstructor;
@@ -42,13 +43,6 @@ public class AccountController {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         
         var account = accountService.createAccount(createAccountRequest);
-        if(account == null){
-
-            if (authentication != null && authentication.getPrincipal() instanceof Long authId) {
-                auditService.logEmployeeAction(authId, "ACCOUNT_CREATE_FAILED");
-            }
-            return ResponseEntity.badRequest().build();
-        }
 
         if (authentication != null && authentication.getPrincipal() instanceof Long authId) {
             auditService.logEmployeeAction(authId, "ACCOUNT_CREATE_SUCCESS");

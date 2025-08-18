@@ -8,6 +8,9 @@ import com.bivolaris.centralbank.entities.Account;
 import com.bivolaris.centralbank.entities.AccountStatus;
 import com.bivolaris.centralbank.entities.AccountTypes;
 import com.bivolaris.centralbank.entities.CurrencyEnum;
+import com.bivolaris.centralbank.exceptions.AccountNotFoundException;
+import com.bivolaris.centralbank.exceptions.BankNotFoundException;
+import com.bivolaris.centralbank.exceptions.ValidationException;
 import com.bivolaris.centralbank.mappers.AccountMapper;
 import com.bivolaris.centralbank.repositories.AccountRepository;
 import com.bivolaris.centralbank.repositories.BankRepository;
@@ -29,6 +32,9 @@ public class AccountService {
 
     public AccountDetailsRequest getAccountDetails(String accountNumber){
         var account = accountRepository.findByAccountNumber(accountNumber);
+        if (account == null) {
+            throw new AccountNotFoundException(accountNumber);
+        }
         return accountMapper.accountDetailsToDto(account);
     }
 
@@ -38,7 +44,7 @@ public class AccountService {
 
         var bankName = bankRepository.findByBankName(request.getBankName()).orElse(null);
         if(bankName == null){
-            return null;
+            throw new BankNotFoundException(request.getBankName());
         }
         try {
             Account account = new Account();
@@ -57,7 +63,7 @@ public class AccountService {
             return accountMapper.accountAllToDto(account);
 
         }catch(Exception e){
-            return null;
+            throw new ValidationException("Account creation failed: " + e.getMessage());
         }
 
 

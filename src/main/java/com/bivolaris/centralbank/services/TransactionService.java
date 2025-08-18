@@ -7,7 +7,10 @@ import com.bivolaris.centralbank.dtos.TransactionRequest;
 import com.bivolaris.centralbank.entities.Account;
 import com.bivolaris.centralbank.entities.Transaction;
 import com.bivolaris.centralbank.entities.TransactionStatus;
+import com.bivolaris.centralbank.exceptions.AccountNotFoundException;
+import com.bivolaris.centralbank.exceptions.FraudDetectedException;
 import com.bivolaris.centralbank.exceptions.InsufficientFundsException;
+import com.bivolaris.centralbank.exceptions.TransactionFailedException;
 import com.bivolaris.centralbank.mappers.TransactionMapper;
 import com.bivolaris.centralbank.repositories.AccountRepository;
 import com.bivolaris.centralbank.repositories.TransactionData;
@@ -16,6 +19,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 
@@ -30,6 +34,7 @@ public class TransactionService {
     private final AccountRepository accountRepository;
     private final BankService bankService;
     private final FraudDetectionService fraudDetectionService;
+    private final CurrencyExchangeService currencyExchangeService;
 
 
     @Transactional
@@ -43,15 +48,31 @@ public class TransactionService {
         ).orElse(null);
 
         if (data == null) {
-            return false;
+            throw new AccountNotFoundException("Source or destination account not found");
         }
 
         Account fromAccount = data.getFromAccount();
-        if (fromAccount.getBalance().compareTo(transactionRequest.getAmount()) < 0) {
+        Account toAccount = data.getToAccount();
+        
 
+        BigDecimal amountInFromCurrency;
+        try {
+            amountInFromCurrency = transactionRequest.getAmount();
+            if (transactionRequest.getCurrency() != fromAccount.getCurrency()) {
+                amountInFromCurrency = currencyExchangeService.convertCurrency(
+                    transactionRequest.getAmount(), 
+                    transactionRequest.getCurrency(), 
+                    fromAccount.getCurrency()
+                );
+            }
+        } catch (Exception e) {
+            throw new TransactionFailedException("Currency conversion failed: " + e.getMessage());
+        }
+        
+        if (fromAccount.getBalance().compareTo(amountInFromCurrency) < 0) {
             throw new InsufficientFundsException(fromAccount.getAccountNumber(),
                     fromAccount.getBalance(),
-                    transactionRequest.getAmount()
+                    amountInFromCurrency
             );
         }
 
@@ -72,7 +93,7 @@ public class TransactionService {
 
         boolean isFraudulent = fraudDetectionService.detectFraud(transaction);
         if (isFraudulent) {
-            return false;
+            throw new FraudDetectedException("Transaction flagged for security review");
         }
 
         boolean sameBank = data.getFromBank().getId().equals(data.getToBank().getId());
@@ -80,16 +101,32 @@ public class TransactionService {
 
 
         if (sameBank) {
-            fromAccount.setBalance(fromAccount.getBalance().subtract(transactionRequest.getAmount()));
-            Account toAccount = data.getToAccount();
-            toAccount.setBalance(toAccount.getBalance().add(transactionRequest.getAmount()));
+            try {
+                BigDecimal debitAmount = amountInFromCurrency;
+                BigDecimal creditAmount = transactionRequest.getAmount();
+                if (transactionRequest.getCurrency() != toAccount.getCurrency()) {
+                    creditAmount = currencyExchangeService.convertCurrency(
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency(),
+                        toAccount.getCurrency()
+                    );
+                }
+                
+                fromAccount.setBalance(fromAccount.getBalance().subtract(debitAmount));
+                toAccount.setBalance(toAccount.getBalance().add(creditAmount));
 
-            accountRepository.save(fromAccount);
-            accountRepository.save(toAccount);
+                accountRepository.save(fromAccount);
+                accountRepository.save(toAccount);
 
-            transaction.setStatus(TransactionStatus.COMPLETED);
-            transaction.setCompletedAt(LocalDateTime.now());
-            transactionRepository.save(transaction);
+                transaction.setStatus(TransactionStatus.COMPLETED);
+                transaction.setCompletedAt(LocalDateTime.now());
+                transactionRepository.save(transaction);
+            } catch (Exception e) {
+                transaction.setStatus(TransactionStatus.FAILED);
+                transaction.setCompletedAt(LocalDateTime.now());
+                transactionRepository.save(transaction);
+                throw new TransactionFailedException("Transaction processing failed: " + e.getMessage());
+            }
         }
         //different bank
         else {
@@ -110,12 +147,10 @@ public class TransactionService {
                 transaction.setStatus(TransactionStatus.FAILED);
                 transaction.setCompletedAt(LocalDateTime.now());
                 transactionRepository.save(transaction);
-                return false;
+                throw new TransactionFailedException("Inter-bank transfer was denied: " + response.getResponseMessage());
             }
         }
-
-
-        return true;
+        return false;
     }
 
 
@@ -141,26 +176,49 @@ public class TransactionService {
         Account fromAccount = transaction.getFromAccount();
         Account toAccount = transaction.getToAccount();
 
+        try {
 
-        if (fromAccount.getBalance().compareTo(transaction.getAmount()) < 0) {
+            java.math.BigDecimal debitAmount = transaction.getAmount();
+            if (transaction.getCurrency() != fromAccount.getCurrency()) {
+                debitAmount = currencyExchangeService.convertCurrency(
+                    transaction.getAmount(),
+                    transaction.getCurrency(),
+                    fromAccount.getCurrency()
+                );
+            }
+
+            if (fromAccount.getBalance().compareTo(debitAmount) < 0) {
+                transaction.setStatus(TransactionStatus.FAILED);
+                transaction.setCompletedAt(LocalDateTime.now());
+                transactionRepository.save(transaction);
+                return false;
+            }
+
+
+            BigDecimal creditAmount = transaction.getAmount();
+            if (transaction.getCurrency() != toAccount.getCurrency()) {
+                creditAmount = currencyExchangeService.convertCurrency(
+                    transaction.getAmount(),
+                    transaction.getCurrency(),
+                    toAccount.getCurrency()
+                );
+            }
+
+            fromAccount.setBalance(fromAccount.getBalance().subtract(debitAmount));
+            toAccount.setBalance(toAccount.getBalance().add(creditAmount));
+
+            accountRepository.save(fromAccount);
+            accountRepository.save(toAccount);
+
+            transaction.setStatus(TransactionStatus.COMPLETED);
+            transaction.setCompletedAt(LocalDateTime.now());
+            transactionRepository.save(transaction);
+        } catch (Exception e) {
             transaction.setStatus(TransactionStatus.FAILED);
             transaction.setCompletedAt(LocalDateTime.now());
             transactionRepository.save(transaction);
             return false;
         }
-
-
-        fromAccount.setBalance(fromAccount.getBalance().subtract(transaction.getAmount()));
-        toAccount.setBalance(toAccount.getBalance().add(transaction.getAmount()));
-
-
-        accountRepository.save(fromAccount);
-        accountRepository.save(toAccount);
-
-
-        transaction.setStatus(TransactionStatus.COMPLETED);
-        transaction.setCompletedAt(LocalDateTime.now());
-        transactionRepository.save(transaction);
 
         return true;
     }
