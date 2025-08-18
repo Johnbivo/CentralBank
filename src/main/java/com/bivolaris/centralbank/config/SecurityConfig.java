@@ -3,8 +3,10 @@ package com.bivolaris.centralbank.config;
 
 import com.bivolaris.centralbank.entities.AuthRole;
 import com.bivolaris.centralbank.filters.JwtAuthenticationFilter;
-import com.bivolaris.centralbank.services.UserService;
+
+
 import lombok.AllArgsConstructor;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -52,6 +54,8 @@ public class SecurityConfig {
     }
 
 
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -63,6 +67,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/refresh").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/bank-token").permitAll()
+                                .requestMatchers("/test/**").permitAll()
                                 .requestMatchers( "/admin/**").hasRole(AuthRole.ADMIN.name())
                                 .anyRequest().authenticated()
 

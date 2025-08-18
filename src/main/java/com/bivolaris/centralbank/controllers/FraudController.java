@@ -6,6 +6,7 @@ import com.bivolaris.centralbank.entities.Employee;
 import com.bivolaris.centralbank.entities.Fraudcase;
 import com.bivolaris.centralbank.entities.FraudStatus;
 import com.bivolaris.centralbank.mappers.FraudCaseMapper;
+import com.bivolaris.centralbank.services.AuditService;
 import com.bivolaris.centralbank.services.EmployeeService;
 import com.bivolaris.centralbank.services.FraudDetectionService;
 import lombok.AllArgsConstructor;
@@ -25,11 +26,17 @@ public class FraudController {
     private final FraudDetectionService fraudDetectionService;
     private final FraudCaseMapper fraudCaseMapper;
     private final EmployeeService employeeService;
+    private final AuditService auditService;
 
 
     @GetMapping("/pending")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EMPLOYEE')")
-    public ResponseEntity<List<FraudCaseDto>> getPendingFraudCases() {
+    public ResponseEntity<List<FraudCaseDto>> getPendingFraudCases(Authentication authentication) {
+
+        if (authentication != null && authentication.getPrincipal() instanceof Long authId) {
+            auditService.logEmployeeAction(authId, "FRAUD_PENDING_CASES_ACCESSED");
+        }
+        
         List<Fraudcase> pendingCases = fraudDetectionService.getPendingFraudCases();
         List<FraudCaseDto> caseDtos = pendingCases.stream()
                 .map(fraudCaseMapper::toDto)
@@ -41,7 +48,12 @@ public class FraudController {
 
     @GetMapping("/status/{status}")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EMPLOYEE')")
-    public ResponseEntity<List<FraudCaseDto>> getFraudCasesByStatus(@PathVariable FraudStatus status) {
+    public ResponseEntity<List<FraudCaseDto>> getFraudCasesByStatus(@PathVariable FraudStatus status, Authentication authentication) {
+
+        if (authentication != null && authentication.getPrincipal() instanceof Long authId) {
+            auditService.logSafeAction(authId, "FRAUD_CASES_BY_STATUS_ACCESSED", status != null ? status.toString() : "null");
+        }
+        
         List<Fraudcase> cases = fraudDetectionService.getFraudCasesByStatus(status);
         List<FraudCaseDto> caseDtos = cases.stream()
                 .map(fraudCaseMapper::toDto)
@@ -77,8 +89,18 @@ public class FraudController {
             );
 
             if (success) {
+
+                if (authentication.getPrincipal() instanceof Long authId) {
+                    auditService.logSafeAction(authId, "FRAUD_CASE_REVIEWED", 
+                        request.getFraudCaseId() != null ? request.getFraudCaseId() : "null",
+                        request.getDecision() != null ? request.getDecision().toString() : "null");
+                }
                 return ResponseEntity.ok().body("Fraud case reviewed successfully");
             } else {
+                if (authentication.getPrincipal() instanceof Long authId) {
+                    auditService.logSafeAction(authId, "FRAUD_CASE_REVIEW_FAILED", 
+                        request.getFraudCaseId() != null ? request.getFraudCaseId() : "null");
+                }
                 return ResponseEntity.badRequest().body("Failed to review fraud case");
             }
             
@@ -90,7 +112,12 @@ public class FraudController {
 
     @GetMapping("/all")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<List<FraudCaseDto>> getAllFraudCases() {
+    public ResponseEntity<List<FraudCaseDto>> getAllFraudCases(Authentication authentication) {
+
+        if (authentication != null && authentication.getPrincipal() instanceof Long authId) {
+            auditService.logEmployeeAction(authId, "ALL_FRAUD_CASES_ACCESSED");
+        }
+        
         List<Fraudcase> allCases = fraudDetectionService.getFraudCasesByStatus(FraudStatus.PENDING);
         allCases.addAll(fraudDetectionService.getFraudCasesByStatus(FraudStatus.REVIEWED));
         allCases.addAll(fraudDetectionService.getFraudCasesByStatus(FraudStatus.DISMISSED));

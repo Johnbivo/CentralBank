@@ -13,6 +13,7 @@ import com.bivolaris.centralbank.mappers.UserMapper;
 import com.bivolaris.centralbank.repositories.AuthRepository;
 import com.bivolaris.centralbank.repositories.BankRepository;
 import com.bivolaris.centralbank.services.AuthService;
+import com.bivolaris.centralbank.services.AuditService;
 import com.bivolaris.centralbank.services.CustomUserDetails;
 import com.bivolaris.centralbank.services.JwtService;
 import jakarta.servlet.http.Cookie;
@@ -43,6 +44,7 @@ public class AuthController {
     private final UserMapper userMapper;
     private final JwtConfig jwtConfig;
     private final BankRepository bankRepository;
+    private final AuditService auditService;
     
     @Value("${spring.bank.bankMasterSecret}")
     private String bankMasterSecret;
@@ -75,6 +77,8 @@ public class AuthController {
         cookie.setSecure(true);
         response.addCookie(cookie);
 
+        auditService.logEmployeeAction(userDetails.getAuthId(), "USER_LOGIN");
+
         return ResponseEntity.ok(new JwtResponse(accessToken.toString()));
     }
 
@@ -90,6 +94,9 @@ public class AuthController {
         }
 
         var accessToken = jwtService.generateAccessToken(jwt.getUserAuthId(), jwt.getAuthRole());
+
+        auditService.logEmployeeAction(jwt.getUserAuthId(), "TOKEN_REFRESH");
+        
         return  ResponseEntity.ok(new JwtResponse(accessToken.toString()));
     }
 
@@ -134,14 +141,12 @@ public class AuthController {
     public ResponseEntity<?> getBankToken(
             @Valid @RequestBody BankAuthRequest request,
             @RequestHeader("Bank-Secret") String bankSecret) {
-        
-        // Validate master secret from header
+
         if (!bankMasterSecret.equals(bankSecret)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("Invalid bank secret");
         }
-        
-        // Find bank by SWIFT code
+
         Bank bank = bankRepository.findAll().stream()
                 .filter(b -> request.getSwift().equals(b.getSwift()) && b.getStatus() == BankStatus.ACTIVE)
                 .findFirst()
@@ -154,6 +159,8 @@ public class AuthController {
         
 
         String bankToken = jwtService.generateBankToken(bank);
+
+        auditService.logBankAction(bank, "BANK_TOKEN_REQUEST");
         
         return ResponseEntity.ok(new JwtResponse(bankToken));
     }

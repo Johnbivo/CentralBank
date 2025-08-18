@@ -69,10 +69,9 @@ public class TransactionService {
 
         transaction = transactionRepository.save(transaction);
 
-        // Perform fraud detection before processing the transaction
+
         boolean isFraudulent = fraudDetectionService.detectFraud(transaction);
         if (isFraudulent) {
-            // Transaction has been flagged for fraud - stop processing
             return false;
         }
 
@@ -165,6 +164,7 @@ public class TransactionService {
 
         return true;
     }
+
 
 
 

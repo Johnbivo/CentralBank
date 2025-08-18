@@ -15,4 +15,7 @@ public interface BankRepository extends JpaRepository<Bank, UUID> {
 
     @Query("SELECT c FROM Bank c WHERE c.name = :bankName ")
     Optional<Bank> findByBankName(@Param("bankName") String bankName);
+    
+    @Query("SELECT b FROM Bank b WHERE b.swift = :swift")
+    Optional<Bank> findBySwift(@Param("swift") String swift);
 }

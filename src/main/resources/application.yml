@@ -24,6 +24,28 @@ spring:
     servlet:
       path: /api
 
-
-
-    
+app:
+  rate-limit:
+    global:
+      enabled: true
+      requests-per-minute: 100
+      requests-per-hour: 1000
+      skip-internal-requests: true
+    auth:
+      login-attempts-per-minute: 5
+      login-attempts-per-hour: 20
+      registration-attempts-per-hour: 3
+      token-refresh-per-minute: 10
+      bank-token-requests-per-minute: 10
+    transaction:
+      transactions-per-minute: 10
+      transactions-per-hour: 100
+    account:
+      account-creation-per-hour: 5
+      account-lookup-per-minute: 20
+    fraud:
+      fraud-reviews-per-minute: 30
+      fraud-query-per-minute: 50
+    admin:
+      admin-actions-per-minute: 50
+      audit-access-per-minute: 20
