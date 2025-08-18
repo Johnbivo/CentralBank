@@ -1,4 +1,4 @@
-# Central Banking System
+# Central Banking System - Backend
 
 A comprehensive Java-based banking system designed to handle multi-currency transactions, fraud detection, and inter-bank communications. Built with Spring Boot and following enterprise-grade patterns, this system demonstrates complex financial domain modeling and real-world banking operations.
 

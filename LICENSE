@@ -1,0 +1,124 @@
+PROPRIETARY SOFTWARE LICENSE AGREEMENT
+
+Copyright (c) 2024 Central Banking System Project
+All rights reserved.
+
+TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+1. DEFINITIONS
+
+"Software" refers to the Central Banking System codebase, documentation, 
+configuration files, and all associated materials contained in this repository.
+
+"Licensee" refers to any individual or entity accessing or using the Software.
+
+"Commercial Use" means any use of the Software for commercial advantage or 
+monetary compensation, including but not limited to incorporating the Software 
+into products or services offered for sale.
+
+2. GRANT OF LICENSE
+
+Subject to the terms and conditions of this Agreement, the copyright holder 
+hereby grants Licensee a limited, non-exclusive, non-transferable READ-ONLY 
+license to:
+
+a) View and read the source code for educational purposes only
+b) Study the Software architecture and implementation patterns for learning
+c) Reference this Software in professional portfolios and resumes
+
+3. RESTRICTIONS
+
+This is a READ-ONLY license. Licensee shall NOT:
+
+a) Execute, run, or deploy the Software in any environment
+b) Use the Software for any Commercial Use
+c) Modify, adapt, alter, translate, or create derivative works
+d) Distribute, redistribute, sublicense, rent, lease, or share the Software
+e) Copy any portion of the Software code for use in other projects
+f) Download or clone the repository for local execution
+g) Remove or alter any copyright notices or proprietary legends
+h) Reverse engineer, decompile, or disassemble the Software
+i) Use the Software in any production, staging, testing, or live environment
+j) Create derivative works or competing products based on this Software
+
+4. READ-ONLY EDUCATIONAL USE
+
+Academic institutions and students may view this Software for educational 
+purposes under the following conditions:
+
+a) Viewing must be strictly for classroom instruction or learning purposes
+b) No downloading, cloning, or local execution is permitted
+c) Students may only read and study the code through web interface
+d) Proper attribution must be given when referencing in academic work
+e) No commercial benefit may be derived from such viewing
+
+5. PORTFOLIO REFERENCE ONLY
+
+The copyright holder permits Licensee to:
+
+a) Reference this Software in resumes and professional portfolios
+b) Discuss the Software's architecture and features in interviews
+c) Show the GitHub repository link to potential employers
+d) Describe the technical implementation in professional contexts
+
+Licensee may NOT download, execute, or demonstrate live functionality.
+
+6. INTELLECTUAL PROPERTY RIGHTS
+
+The Software contains proprietary and confidential information protected by 
+copyright laws and international copyright treaties. All rights, title, and 
+interest in and to the Software remain exclusively with the copyright holder.
+
+7. NO WARRANTY
+
+THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. THE COPYRIGHT HOLDER 
+MAKES NO WARRANTIES REGARDING THE SOFTWARE'S PERFORMANCE, RELIABILITY, OR 
+SUITABILITY FOR ANY PARTICULAR PURPOSE.
+
+8. LIMITATION OF LIABILITY
+
+IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY DIRECT, INDIRECT, 
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
+OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE SOFTWARE.
+
+9. TERMINATION
+
+This license is effective until terminated. Licensee's rights under this 
+license will terminate automatically without notice if Licensee fails to 
+comply with any term of this Agreement. Upon termination, Licensee must 
+cease all use of the Software and destroy all copies in their possession.
+
+10. COMPLIANCE WITH LAWS
+
+Licensee agrees to comply with all applicable laws and regulations in 
+connection with their use of the Software.
+
+11. GOVERNING LAW
+
+This Agreement shall be governed by and construed in accordance with the 
+laws of [Your Jurisdiction], without regard to its conflict of law principles.
+
+12. CONTACT INFORMATION
+
+For licensing inquiries, permission requests, or questions regarding this 
+Agreement, please contact:
+
+Email: [ioannis@bivolaris.com]
+GitHub: https://github.com/Johnbivo/CentralBankSystem
+
+13. ENTIRE AGREEMENT
+
+This Agreement constitutes the entire agreement between the parties concerning 
+the subject matter hereof and supersedes all prior or contemporaneous 
+agreements, whether written or oral.
+
+BY ACCESSING OR USING THE SOFTWARE, LICENSEE ACKNOWLEDGES THAT THEY HAVE 
+READ THIS AGREEMENT, UNDERSTAND IT, AND AGREE TO BE BOUND BY ITS TERMS 
+AND CONDITIONS.
+
+Last Updated: January 2025
