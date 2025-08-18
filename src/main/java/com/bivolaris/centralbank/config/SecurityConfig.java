@@ -68,6 +68,11 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/auth/refresh").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/bank-token").permitAll()
                                 .requestMatchers("/test/**").permitAll()
+                                .requestMatchers("/swagger-ui/**").permitAll()
+                                .requestMatchers("/swagger-ui.html").permitAll()
+                                .requestMatchers("/api-docs/**").permitAll()
+                                .requestMatchers("/v3/api-docs/**").permitAll()
+                                .requestMatchers("/webjars/**").permitAll()
                                 .requestMatchers( "/admin/**").hasRole(AuthRole.ADMIN.name())
                                 .anyRequest().authenticated()
 

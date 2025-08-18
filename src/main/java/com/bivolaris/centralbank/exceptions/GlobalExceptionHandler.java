@@ -129,7 +129,9 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 "CURRENCY_CONVERSION_ERROR",
                 ex.getMessage(),
-                java.time.Instant.now()
+                "Currency conversion failed. Please try again.",
+                "",
+                HttpStatus.BAD_REQUEST.value()
         );
         
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
