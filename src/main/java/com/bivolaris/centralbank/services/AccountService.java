@@ -6,6 +6,8 @@ import com.bivolaris.centralbank.dtos.AccountDetailsRequest;
 import com.bivolaris.centralbank.dtos.CreateAccountRequest;
 import com.bivolaris.centralbank.entities.Account;
 import com.bivolaris.centralbank.entities.AccountStatus;
+import com.bivolaris.centralbank.entities.AccountTypes;
+import com.bivolaris.centralbank.entities.CurrencyEnum;
 import com.bivolaris.centralbank.mappers.AccountMapper;
 import com.bivolaris.centralbank.repositories.AccountRepository;
 import com.bivolaris.centralbank.repositories.BankRepository;
@@ -42,11 +44,11 @@ public class AccountService {
             Account account = new Account();
             account.setBank(bankName);
             account.setAccountHolderName(request.getAccountHolderName());
-            account.setAccountType(String.valueOf(request.getAccountType()));
+            account.setAccountType(request.getAccountType());
             account.setBalance(BigDecimal.ZERO);
             account.setAccountNumber(generateContent.generateAccountNumber());
-            account.setCurrency(String.valueOf(request.getCurrency()));
-            account.setStatus(AccountStatus.INACTIVE.name());
+            account.setCurrency(request.getCurrency());
+            account.setStatus(AccountStatus.INACTIVE);
             account.setCreatedAt(Instant.now());
             account.setUpdatedAt(Instant.now());
 

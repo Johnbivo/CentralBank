@@ -11,8 +11,13 @@ spring:
 
   jwt:
     secret: ${JWT_SECRET}
+    interBankSecret: ${INTERBANK_SECRET}
     accessTokenExpiration: 900 # 15 min
     refreshTokenExpiration: 604800 # 7 days
+
+
+  bank:
+    bankMasterSecret: ${BANK_MASTER_SECRET}
 
 
   mvc:

@@ -1,12 +1,15 @@
 package com.bivolaris.centralbank.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-
+@Getter
+@Setter
 @Entity
 @Table(name = "transactions")
 public class Transaction {
@@ -15,12 +18,14 @@ public class Transaction {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "from_account_id")
-    private UUID fromAccountId;
+    @ManyToOne
+    @JoinColumn(name = "from_account_id")
+    private Account fromAccount;
 
 
-    @Column(name = "to_account_id")
-    private UUID toAccountId;
+    @ManyToOne
+    @JoinColumn(name = "to_account_id")
+    private Account toAccount;
 
 
     @ManyToOne
@@ -57,6 +62,9 @@ public class Transaction {
 
     @Column(name = "completed_at")
     private LocalDateTime completedAt;
+
+    @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    private LocalDateTime updatedAt;
 
     @OneToOne(mappedBy = "transaction")
     private Fraudcase fraudcase;

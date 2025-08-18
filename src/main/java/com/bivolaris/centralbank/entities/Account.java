@@ -40,7 +40,8 @@ public class Account {
 
 
     @Column(name = "account_type")
-    private String accountType;
+    @Enumerated(EnumType.STRING)
+    private AccountTypes accountType;
 
 
     @Column(name = "balance")
@@ -49,11 +50,13 @@ public class Account {
 
 
     @Column(name = "currency")
-    private String currency;
+    @Enumerated(EnumType.STRING)
+    private CurrencyEnum currency;
 
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private AccountStatus status;
 
 
     @Column(name = "created_at")

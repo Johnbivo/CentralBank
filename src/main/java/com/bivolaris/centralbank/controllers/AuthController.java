@@ -2,32 +2,39 @@ package com.bivolaris.centralbank.controllers;
 
 
 import com.bivolaris.centralbank.config.JwtConfig;
+import com.bivolaris.centralbank.dtos.BankAuthRequest;
 import com.bivolaris.centralbank.dtos.JwtResponse;
 import com.bivolaris.centralbank.dtos.LoginRequest;
 import com.bivolaris.centralbank.dtos.RegisterRequest;
 import com.bivolaris.centralbank.dtos.UserDto;
+import com.bivolaris.centralbank.entities.Bank;
+import com.bivolaris.centralbank.entities.BankStatus;
 import com.bivolaris.centralbank.mappers.UserMapper;
 import com.bivolaris.centralbank.repositories.AuthRepository;
+import com.bivolaris.centralbank.repositories.BankRepository;
 import com.bivolaris.centralbank.services.AuthService;
 import com.bivolaris.centralbank.services.CustomUserDetails;
 import com.bivolaris.centralbank.services.JwtService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-@AllArgsConstructor
+
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-
 
     private final AuthService authService;
     private final AuthenticationManager authenticationManager;
@@ -35,6 +42,14 @@ public class AuthController {
     private final AuthRepository authRepository;
     private final UserMapper userMapper;
     private final JwtConfig jwtConfig;
+    private final BankRepository bankRepository;
+    
+    @Value("${spring.bank.bankMasterSecret}")
+    private String bankMasterSecret;
+
+    
+
+
 
 
     @PostMapping("/login")
@@ -110,6 +125,38 @@ public class AuthController {
 
 
 
+
+    /**
+     * Endpoint for banks to get inter-bank authentication tokens
+     * Requires bank SWIFT code in body and master secret in X-Bank-Secret header
+     */
+    @PostMapping("/bank-token")
+    public ResponseEntity<?> getBankToken(
+            @Valid @RequestBody BankAuthRequest request,
+            @RequestHeader("Bank-Secret") String bankSecret) {
+        
+        // Validate master secret from header
+        if (!bankMasterSecret.equals(bankSecret)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid bank secret");
+        }
+        
+        // Find bank by SWIFT code
+        Bank bank = bankRepository.findAll().stream()
+                .filter(b -> request.getSwift().equals(b.getSwift()) && b.getStatus() == BankStatus.ACTIVE)
+                .findFirst()
+                .orElse(null);
+        
+        if (bank == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid bank SWIFT code or bank not active");
+        }
+        
+
+        String bankToken = jwtService.generateBankToken(bank);
+        
+        return ResponseEntity.ok(new JwtResponse(bankToken));
+    }
 
     @ExceptionHandler({BadCredentialsException.class})
     public ResponseEntity<Void> handleBadCredentialsException(){

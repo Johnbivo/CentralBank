@@ -12,7 +12,6 @@ import org.mapstruct.Mapping;
 public interface AccountMapper {
 
     @Mapping(target = "bankName", source = "bank.name")
-    @Mapping(target = "accountId", source = "id")
     AccountDetailsRequest accountDetailsToDto(Account account);
 
 

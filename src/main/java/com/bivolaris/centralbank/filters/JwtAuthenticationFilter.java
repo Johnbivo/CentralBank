@@ -33,26 +33,41 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         var token = authHeader.replace("Bearer ", "");
+        
+
+
         var jwt = jwtService.parseToken(token);
-        if(jwt == null || jwt.isExpired()) {
+        if (jwt != null && !jwt.isExpired()) {
+            var authentication = new UsernamePasswordAuthenticationToken(
+                    jwt.getUserAuthId(),
+                    null,
+                    List.of(new SimpleGrantedAuthority("ROLE_" + jwt.getAuthRole()))
+            );
+            authentication.setDetails(
+                    new WebAuthenticationDetailsSource().buildDetails(request)
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            filterChain.doFilter(request, response);
+            return;
+        }
+        
+
+        var bankClaims = jwtService.parseBankToken(token);
+        if (bankClaims != null && !bankClaims.getExpiration().before(new java.util.Date())) {
+            var authentication = new UsernamePasswordAuthenticationToken(
+                    bankClaims.get("bankId", String.class),
+                    null,
+                    List.of(new SimpleGrantedAuthority("ROLE_BANK"))
+            );
+            authentication.setDetails(
+                    new WebAuthenticationDetailsSource().buildDetails(request)
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(request, response);
             return;
         }
 
-
-
-        var authentication = new UsernamePasswordAuthenticationToken(
-                jwt.getUserAuthId(),
-                null,
-                List.of(new SimpleGrantedAuthority("ROLE_" + jwt.getAuthRole()))
-        );
-        authentication.setDetails(
-                new WebAuthenticationDetailsSource().buildDetails(request)
-                );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
+        // Neither token type worked
         filterChain.doFilter(request, response);
-
     }
 }

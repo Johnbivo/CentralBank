@@ -4,5 +4,6 @@ public enum TransactionStatus {
     PENDING,
     COMPLETED,
     FAILED,
-    CANCELLED
+    CANCELLED,
+    FLAGGED_FOR_FRAUD
 }

@@ -2,13 +2,11 @@ package com.bivolaris.centralbank.services;
 
 
 import com.bivolaris.centralbank.config.JwtConfig;
-import com.bivolaris.centralbank.entities.Auth;
 import com.bivolaris.centralbank.entities.AuthRole;
-import com.bivolaris.centralbank.repositories.AuthRepository;
+import com.bivolaris.centralbank.entities.Bank;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +59,37 @@ public class JwtService {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+    }
+
+
+
+    public String generateBankToken(Bank bank) {
+        var claims = Jwts.claims()
+                .subject(bank.getSwift())
+                .add("bankId", bank.getId().toString())
+                .add("bankName", bank.getName())
+                .add("type", "BANK_AUTH")
+                .issuer("CENTRAL_BANK")
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 300000L)) // 5 minutes
+                .build();
+
+        return Jwts.builder()
+                .claims(claims)
+                .signWith(jwtConfig.getInterBankSecretKey())
+                .compact();
+    }
+
+    public Claims parseBankToken(String token) {
+        try {
+            return Jwts.parser()
+                    .verifyWith(jwtConfig.getInterBankSecretKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (JwtException e) {
+            return null;
+        }
     }
 
 }

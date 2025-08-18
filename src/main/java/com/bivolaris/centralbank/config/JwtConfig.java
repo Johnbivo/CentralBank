@@ -14,10 +14,15 @@ import javax.crypto.SecretKey;
 public class JwtConfig {
 
     private String secret;
+    private String interBankSecret;
     private int accessTokenExpiration;
     private int refreshTokenExpiration;
 
     public SecretKey getSecretKey(){
         return Keys.hmacShaKeyFor(secret.getBytes());
+    }
+
+    public SecretKey getInterBankSecretKey(){
+        return Keys.hmacShaKeyFor(interBankSecret.getBytes());
     }
 }
