@@ -24,11 +24,11 @@ public class SwaggerConfig {
                         .description("Comprehensive API for central banking operations including multi-currency transactions, fraud detection, and inter-bank communication")
                         .contact(new Contact()
                                 .name("Banking System Team")
-                                .email("support@centralbank.com")
-                                .url("https://github.com/your-repo"))
+                                .email("ioannis@bivolaris.com")
+                                .url("https://github.com/Johnbivo/CentralBank"))
                         .license(new License()
                                 .name("Proprietary Read-Only License")
-                                .url("https://github.com/yourusername/central-banking-system/blob/main/LICENSE")))
+                                .url("https://github.com/Johnbivo/CentralBank")))
                 .servers(List.of(
                         new Server().url("http://localhost:8080/api").description("Development Server"),
                         new Server().url("http://localhost:8080/api").description("Production Server")))
