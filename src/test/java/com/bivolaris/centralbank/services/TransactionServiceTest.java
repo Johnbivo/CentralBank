@@ -45,7 +45,7 @@ class TransactionServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Set up test data
+
         validTransactionRequest = new TransactionRequest();
         validTransactionRequest.setAccountNumber("123456789");
         validTransactionRequest.setToAccountNumber("987654321");
@@ -56,7 +56,7 @@ class TransactionServiceTest {
         validTransactionRequest.setMessage("Test transaction");
         validTransactionRequest.setAccountHolderName("John Doe");
 
-        // Set up from account with sufficient balance
+
         fromAccount = new Account();
         fromAccount.setId(UUID.randomUUID());
         fromAccount.setAccountNumber("123456789");

@@ -1,13 +1,12 @@
-package com.bivolaris.centralbank.services;
+package com.bivolaris.centralbank.services.impl;
 
 
 import com.bivolaris.centralbank.dtos.RegisterRequest;
-import com.bivolaris.centralbank.dtos.ResetPasswordRequest;
 import com.bivolaris.centralbank.entities.Auth;
 import com.bivolaris.centralbank.entities.Employee;
 import com.bivolaris.centralbank.repositories.AuthRepository;
 import com.bivolaris.centralbank.repositories.EmployeeRepository;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import com.bivolaris.centralbank.services.AuthService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.AllArgsConstructor;
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
 @Service
-public class AuthService {
+public class AuthServiceImpl implements AuthService {
 
 
     private final AuthRepository authRepository;
@@ -52,10 +51,7 @@ public class AuthService {
                     registerRequest.getProfession()
             );
 
-            // establish relationship
             authUser.setEmployee(employee);
-
-            // only need one save because of CascadeType.ALL
             authRepository.save(authUser);
 
             return true;

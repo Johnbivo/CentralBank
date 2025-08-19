@@ -1,4 +1,4 @@
-package com.bivolaris.centralbank.services;
+package com.bivolaris.centralbank.services.impl;
 
 
 import com.bivolaris.centralbank.dtos.AccountAllDto;
@@ -6,14 +6,14 @@ import com.bivolaris.centralbank.dtos.AccountDetailsRequest;
 import com.bivolaris.centralbank.dtos.CreateAccountRequest;
 import com.bivolaris.centralbank.entities.Account;
 import com.bivolaris.centralbank.entities.AccountStatus;
-import com.bivolaris.centralbank.entities.AccountTypes;
-import com.bivolaris.centralbank.entities.CurrencyEnum;
 import com.bivolaris.centralbank.exceptions.AccountNotFoundException;
 import com.bivolaris.centralbank.exceptions.BankNotFoundException;
 import com.bivolaris.centralbank.exceptions.ValidationException;
 import com.bivolaris.centralbank.mappers.AccountMapper;
 import com.bivolaris.centralbank.repositories.AccountRepository;
 import com.bivolaris.centralbank.repositories.BankRepository;
+import com.bivolaris.centralbank.services.AccountService;
+import com.bivolaris.centralbank.services.GenerateContent;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,7 @@ import java.time.Instant;
 
 @AllArgsConstructor
 @Service
-public class AccountService {
+public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;

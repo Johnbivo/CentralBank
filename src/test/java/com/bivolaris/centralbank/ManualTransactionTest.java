@@ -101,7 +101,7 @@ public class ManualTransactionTest {
         largeRequest.setToAccountNumber("TEST002");
         largeRequest.setToBankName("Test Destination Bank");
         largeRequest.setAccountHolderName("Alice Johnson");
-        largeRequest.setAmount(new BigDecimal("5000.00")); // More than balance
+        largeRequest.setAmount(new BigDecimal("5000.00"));
         largeRequest.setCurrency(CurrencyEnum.USD);
         largeRequest.setMessage("Large payment that should fail");
 

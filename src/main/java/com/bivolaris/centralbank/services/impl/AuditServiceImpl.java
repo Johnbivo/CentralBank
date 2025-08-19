@@ -1,4 +1,4 @@
-package com.bivolaris.centralbank.services;
+package com.bivolaris.centralbank.services.impl;
 
 import com.bivolaris.centralbank.entities.Auditlog;
 import com.bivolaris.centralbank.entities.Bank;
@@ -6,6 +6,7 @@ import com.bivolaris.centralbank.entities.Employee;
 import com.bivolaris.centralbank.repositories.AuditLogRepository;
 import com.bivolaris.centralbank.repositories.AuthRepository;
 import com.bivolaris.centralbank.repositories.BankRepository;
+import com.bivolaris.centralbank.services.AuditService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ import java.util.regex.Pattern;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AuditService {
+public class AuditServiceImpl implements AuditService {
 
     private final AuditLogRepository auditLogRepository;
     private final AuthRepository authRepository;

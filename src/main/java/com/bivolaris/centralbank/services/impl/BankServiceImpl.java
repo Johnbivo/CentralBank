@@ -1,8 +1,10 @@
-package com.bivolaris.centralbank.services;
+package com.bivolaris.centralbank.services.impl;
 
 import com.bivolaris.centralbank.dtos.BankTransferRequest;
 import com.bivolaris.centralbank.dtos.BankTransferResponse;
 import com.bivolaris.centralbank.entities.Bank;
+import com.bivolaris.centralbank.services.BankService;
+import com.bivolaris.centralbank.services.JwtService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -13,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 @AllArgsConstructor
 @Service
-public class BankService {
+public class BankServiceImpl implements BankService {
 
     private final RestTemplate restTemplate;
     private final JwtService jwtService;

@@ -1,8 +1,9 @@
-package com.bivolaris.centralbank.services;
+package com.bivolaris.centralbank.services.impl;
 
 import com.bivolaris.centralbank.entities.*;
 import com.bivolaris.centralbank.repositories.FraudCaseRepository;
 import com.bivolaris.centralbank.repositories.TransactionRepository;
+import com.bivolaris.centralbank.services.FraudDetectionService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Service
-public class FraudDetectionService {
+public class FraudDetectionServiceImpl implements FraudDetectionService {
 
     private final FraudCaseRepository fraudCaseRepository;
     private final TransactionRepository transactionRepository;
@@ -192,7 +193,7 @@ public class FraudDetectionService {
                         oneHourAgo
                 );
 
-        return sameAccountTransfers >= 3; // More than 3 transfers to same account in an hour
+        return sameAccountTransfers >= 3;
     }
 
     /**
@@ -200,7 +201,6 @@ public class FraudDetectionService {
      */
     private boolean isOffHoursTransaction(Transaction transaction) {
         int hour = transaction.getInitiatedAt().getHour();
-        // Consider transactions between 11 PM and 6 AM as off-hours
         return hour >= 23 || hour <= 6;
     }
 
@@ -221,7 +221,7 @@ public class FraudDetectionService {
             fraudCase.setReviewedBy(reviewedBy);
             fraudCase.setUpdatedAt(LocalDateTime.now());
             
-            // Save fraud case - database trigger will automatically update transaction status
+
             fraudCaseRepository.save(fraudCase);
             
             return true;
@@ -230,16 +230,11 @@ public class FraudDetectionService {
         }
     }
 
-    /**
-     * Gets all pending fraud cases for review
-     */
     public List<Fraudcase> getPendingFraudCases() {
         return fraudCaseRepository.findByStatusOrderByFlaggedAtDesc(FraudStatus.PENDING);
     }
 
-    /**
-     * Gets fraud cases by status
-     */
+
     public List<Fraudcase> getFraudCasesByStatus(FraudStatus status) {
         return fraudCaseRepository.findByStatusOrderByFlaggedAtDesc(status);
     }

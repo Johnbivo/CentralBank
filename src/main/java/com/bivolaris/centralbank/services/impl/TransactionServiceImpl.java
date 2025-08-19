@@ -1,4 +1,4 @@
-package com.bivolaris.centralbank.services;
+package com.bivolaris.centralbank.services.impl;
 
 
 import com.bivolaris.centralbank.dtos.BankTransferRequest;
@@ -15,6 +15,10 @@ import com.bivolaris.centralbank.mappers.TransactionMapper;
 import com.bivolaris.centralbank.repositories.AccountRepository;
 import com.bivolaris.centralbank.repositories.TransactionData;
 import com.bivolaris.centralbank.repositories.TransactionRepository;
+import com.bivolaris.centralbank.services.BankService;
+import com.bivolaris.centralbank.services.CurrencyExchangeService;
+import com.bivolaris.centralbank.services.FraudDetectionService;
+import com.bivolaris.centralbank.services.TransactionService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +29,7 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Service
-public class TransactionService {
+public class TransactionServiceImpl implements TransactionService {
 
 
 
@@ -222,11 +226,6 @@ public class TransactionService {
 
         return true;
     }
-
-
-
-
-
 
 
 
