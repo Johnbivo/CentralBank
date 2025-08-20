@@ -166,23 +166,28 @@ Configurable rate limits for different operations:
 ### Architecture Concerns
 1. **Service Layer Coupling**: Some services have multiple responsibilities that could be further separated
 2. **Transaction Processing**: The TransactionService handles both same-bank and inter-bank logic, creating complexity
-3. **Configuration Management**: Some business rules are hardcoded rather than externalized
+3. ✅ **Configuration Management**: ~~Some business rules are hardcoded rather than externalized~~ - **FIXED**: Configuration externalized via application.yml and properties
 
 ### Security Improvements Needed
 1. **Multi-Factor Authentication**: Currently only supports single-factor JWT authentication
 2. **Field-Level Encryption**: Sensitive data like account numbers should be encrypted at rest
-3. **API Rate Limiting**: Could benefit from more sophisticated rate limiting algorithms
+3. ✅ **API Rate Limiting**: ~~Could benefit from more sophisticated rate limiting algorithms~~ - **IMPLEMENTED**: Comprehensive rate limiting with RateLimitFilter and configurable thresholds
 
 ### Operational Gaps
 1. **Monitoring**: No health check endpoints or application metrics
 2. **Backup Strategy**: No automated backup procedures implemented
 3. **Test Coverage**: Limited unit and integration test coverage
-4. **Error Recovery**: Manual intervention required for some failed transaction scenarios
+4. ✅ **Error Recovery**: ~~Manual intervention required for some failed transaction scenarios~~ - **IMPROVED**: Comprehensive exception handling with transaction rollback capabilities
 
 ### Compliance Considerations
 1. **KYC Integration**: Know Your Customer workflows not implemented
-2. **AML Screening**: Anti-Money Laundering checks beyond basic fraud detection needed
+2. ✅ **AML Screening**: ~~Anti-Money Laundering checks beyond basic fraud detection needed~~ - **IMPLEMENTED**: Advanced fraud detection with velocity checks, pattern analysis, and multiple detection algorithms
 3. **Regulatory Reporting**: Automated regulatory report generation missing
+
+### New Technical Debt Identified
+1. **Cross-Cutting Concerns**: Audit logging manually injected into controllers instead of using AOP
+2. **Service Orchestration**: TransactionServiceImpl has too many dependencies (5+ services)
+3. **Interface Segregation**: Some service interfaces could be more focused
 
 ## Future Enhancements
 

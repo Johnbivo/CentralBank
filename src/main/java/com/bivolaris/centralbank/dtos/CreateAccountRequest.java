@@ -6,6 +6,7 @@ import com.bivolaris.centralbank.entities.CurrencyEnum;
 import lombok.Data;
 
 @Data
+
 public class CreateAccountRequest {
 
     private String bankName;
