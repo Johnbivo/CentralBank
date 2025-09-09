@@ -182,8 +182,8 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <configuration>
                     <url>jdbc:mysql://localhost:3306/centralBank?createDatabaseIfNotExist=true</url>
-                    <user>Johnbivo</user>
-                    <password>74e80b01g06e1103E</password>
+                    <user>{USERNAME}</user> put your username here
+                    <password>{PASSWORD}</password> -- put your password here
                     <baselineOnMigrate>true</baselineOnMigrate>
                 </configuration>
             </plugin>
