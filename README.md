@@ -1,6 +1,6 @@
 # Central Banking System - Backend
 
-A comprehensive Java-based banking system designed to handle multi-currency transactions, fraud detection, and inter-bank communications. Built with Spring Boot and following enterprise-grade patterns, this system demonstrates complex financial domain modeling and real-world banking operations.
+A comprehensive Java-based banking system designed to handle multi-currency transactions, fraud detection, and inter-bank communications. Built with Spring Boot.
 
 ## Table of Contents
 - [System Overview](#system-overview)
@@ -17,6 +17,7 @@ A comprehensive Java-based banking system designed to handle multi-currency tran
 - [License](#license)
 
 ## System Overview
+This system is the central part of the banking system I am building as a peronal project.
 
 This central banking system serves as the backbone for processing financial transactions between multiple banks. It handles currency conversions using real-time exchange rates, implements sophisticated fraud detection algorithms, and maintains comprehensive audit trails for regulatory compliance.
 
@@ -229,4 +230,4 @@ The software is provided for educational and portfolio demonstration purposes. C
 For questions about this project or potential collaboration opportunities, please reach out through GitHub issues or direct contact.
 
 ---
-*Built with Java 21, Spring Boot, and a passion for clean, maintainable code.*
+*Built with Java 21, Spring Boot.*
