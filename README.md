@@ -177,12 +177,7 @@ Configurable rate limits for different operations:
 1. **Monitoring**: No health check endpoints or application metrics
 2. **Backup Strategy**: No automated backup procedures implemented
 3. **Test Coverage**: Limited unit and integration test coverage
-4. ✅ **Error Recovery**: ~~Manual intervention required for some failed transaction scenarios~~ - **IMPROVED**: Comprehensive exception handling with transaction rollback capabilities
 
-### Compliance Considerations
-1. **KYC Integration**: Know Your Customer workflows not implemented
-2. ✅ **AML Screening**: ~~Anti-Money Laundering checks beyond basic fraud detection needed~~ - **IMPLEMENTED**: Advanced fraud detection with velocity checks, pattern analysis, and multiple detection algorithms
-3. **Regulatory Reporting**: Automated regulatory report generation missing
 
 ### New Technical Debt Identified
 1. **Cross-Cutting Concerns**: Audit logging manually injected into controllers instead of using AOP
